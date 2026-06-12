@@ -44,7 +44,7 @@ An offline-first Flutter app that delivers contextual quotes based on your mood.
 - [x] Add widget coverage for favorites and settings flows
 - [ ] Run `flutter analyze` successfully in a Flutter-enabled environment
 - [ ] Run `flutter test` successfully in a Flutter-enabled environment
-- [ ] Add CI automation for `flutter analyze` and `flutter test`
+- [x] Add CI automation for `flutter analyze` and `flutter test`
 
 ### Release ops
 
