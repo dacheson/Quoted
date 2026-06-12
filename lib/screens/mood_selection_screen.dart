@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/mood.dart';
+import '../screens/favorites_screen.dart';
 import '../screens/quote_flow_screen.dart';
 import '../screens/settings_screen.dart';
 import '../widgets/mood_button.dart';
@@ -25,6 +26,11 @@ class MoodSelectionScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Quoted'),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.bookmark_border),
+            tooltip: 'Favorites',
+            onPressed: () => _openFavorites(context),
+          ),
           IconButton(
             icon: const Icon(Icons.settings_outlined),
             tooltip: 'Settings',
@@ -96,6 +102,20 @@ class MoodSelectionScreen extends StatelessWidget {
             opacity: animation,
             child: child,
           );
+        },
+        transitionDuration: const Duration(milliseconds: 350),
+      ),
+    );
+  }
+
+  void _openFavorites(BuildContext context) {
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            const FavoritesScreen(),
+        transitionsBuilder:
+            (context, animation, secondaryAnimation, child) {
+          return FadeTransition(opacity: animation, child: child);
         },
         transitionDuration: const Duration(milliseconds: 350),
       ),
