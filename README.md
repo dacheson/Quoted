@@ -6,12 +6,49 @@ An offline-first Flutter app that delivers contextual quotes based on your mood.
 
 ## Status
 
-✅ MVP-ready foundation
+✅ MVP-ready foundation on `copilot/check-next-steps`
+
+## Run locally
+
+1. Install Flutter 3.10 or newer.
+2. Run `flutter pub get`.
+3. Launch the app with `flutter run`.
+
+## Validation
+
+- `flutter analyze`
+- `flutter test`
 
 ## Included in the MVP
 
-- Mood-based quote selection
-- Offline favorites and dark mode
-- Persisted likes/dislikes for personalization across app restarts
-- Local quote dataset with contextual source details
-- Basic automated coverage for ranking, persistence, and core UI
+- [x] Mood-based quote selection
+- [x] Offline favorites and dark mode
+- [x] Persisted likes/dislikes for personalization across app restarts
+- [x] Local quote dataset with contextual source details
+- [x] Basic automated coverage for ranking, persistence, and core UI
+
+## Ship-ready checklist
+
+### Product and UX
+
+- [x] Ship the core quote flow for all moods
+- [x] Persist favorites, likes/dislikes, and dark mode locally
+- [x] Cover exhausted and empty states in the main user flows
+- [ ] Add final app icon, launch branding, and a polish pass for spacing/copy
+- [ ] Smoke-test every mood flow on physical iOS and Android devices
+
+### Quality
+
+- [x] Document the local setup and validation commands
+- [x] Cover ranking, persistence, session-state, and mood-selection behavior with tests
+- [x] Add widget coverage for favorites and settings flows
+- [ ] Run `flutter analyze` successfully in a Flutter-enabled environment
+- [ ] Run `flutter test` successfully in a Flutter-enabled environment
+- [ ] Add CI automation for `flutter analyze` and `flutter test`
+
+### Release ops
+
+- [ ] Replace the Android debug signing config with a real release signing setup
+- [ ] Verify iOS archive/release configuration
+- [ ] Prepare store copy, screenshots, privacy disclosures, and release notes
+- [ ] Produce and review a beta build for each platform
