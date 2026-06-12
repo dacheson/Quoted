@@ -6,4 +6,12 @@ An offline-first Flutter app that delivers contextual quotes based on your mood.
 
 ## Status
 
-🚀 Building MVP
+✅ MVP-ready foundation
+
+## Included in the MVP
+
+- Mood-based quote selection
+- Offline favorites and dark mode
+- Persisted likes/dislikes for personalization across app restarts
+- Local quote dataset with contextual source details
+- Basic automated coverage for ranking, persistence, and core UI

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../services/storage_service.dart';
 import '../theme/app_theme.dart';
 
-/// Settings bottom sheet with dark mode toggle, clear favorites, and about.
+/// Settings bottom sheet with theme, reset, and about actions.
 class SettingsScreen extends StatefulWidget {
   final bool darkMode;
   final ValueChanged<bool> onToggleDarkMode;
@@ -85,6 +85,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
             _Divider(isDark: isDark),
 
+            _SettingsTile(
+              icon: Icons.restart_alt,
+              title: 'Reset Personalization',
+              isDark: isDark,
+              onTap: () => _confirmResetPersonalization(context),
+            ),
+
+            _Divider(isDark: isDark),
+
             // Clear favorites
             _SettingsTile(
               icon: Icons.delete_outline,
@@ -134,6 +143,36 @@ class _SettingsScreenState extends State<SettingsScreen> {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Favorites cleared.')),
+        );
+      }
+    }
+  }
+
+  Future<void> _confirmResetPersonalization(BuildContext context) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Reset Personalization'),
+        content: const Text(
+          'This will remove your saved likes and dislikes so quote matching starts fresh. Continue?',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: const Text('Reset'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed == true) {
+      await StorageService.clearPersonalization();
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Personalization reset.')),
         );
       }
     }

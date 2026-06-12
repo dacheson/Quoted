@@ -28,6 +28,7 @@ class _QuoteFlowScreenState extends State<QuoteFlowScreen>
   bool _liked = false;
   bool _disliked = false;
   bool _saved = false;
+  int _sessionLikes = 0;
 
   // Animation
   late AnimationController _fadeController;
@@ -36,7 +37,11 @@ class _QuoteFlowScreenState extends State<QuoteFlowScreen>
   @override
   void initState() {
     super.initState();
-    _session = SessionState(selectedMood: widget.mood);
+    _session = SessionState(
+      selectedMood: widget.mood,
+      likedQuotes: StorageService.getLikedQuotes(),
+      dislikedQuotes: StorageService.getDislikedQuotes(),
+    );
 
     _fadeController = AnimationController(
       vsync: this,
@@ -85,21 +90,26 @@ class _QuoteFlowScreenState extends State<QuoteFlowScreen>
 
   void _onLike() {
     if (_currentQuote == null || _liked) return;
+    final quote = _currentQuote!;
     setState(() {
       _liked = true;
       _disliked = false;
+      _sessionLikes += 1;
     });
-    _session = _session.withLike(_currentQuote!);
+    _session = _session.withLike(quote);
+    StorageService.saveLikedQuote(quote);
     Future.delayed(const Duration(milliseconds: 500), _advance);
   }
 
   void _onDislike() {
     if (_currentQuote == null || _disliked) return;
+    final quote = _currentQuote!;
     setState(() {
       _disliked = true;
       _liked = false;
     });
-    _session = _session.withDislike(_currentQuote!);
+    _session = _session.withDislike(quote);
+    StorageService.saveDislikedQuote(quote);
     Future.delayed(const Duration(milliseconds: 500), _advance);
   }
 
@@ -179,11 +189,11 @@ class _QuoteFlowScreenState extends State<QuoteFlowScreen>
             ExpandableContext(quote: _currentQuote!),
             const SizedBox(height: 24),
             // Session summary chip
-            if (_session.likedQuotes.isNotEmpty)
+            if (_sessionLikes > 0)
               Padding(
                 padding: const EdgeInsets.only(top: 8),
                 child: Text(
-                  '${_session.likedQuotes.length} liked this session',
+                  '$_sessionLikes liked this session',
                   style: TextStyle(
                     fontSize: 12,
                     color:
