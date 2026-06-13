@@ -33,7 +33,11 @@ class QuoteService {
   ///         + random_noise * 0.2
   ///
   /// Returns null when all quotes have been seen.
-  static Quote? nextQuote(List<Quote> allQuotes, SessionState session) {
+  static Quote? nextQuote(
+    List<Quote> allQuotes,
+    SessionState session, {
+    Random? random,
+  }) {
     final unseen = allQuotes
         .where((q) => !session.seenQuoteIds.contains(q.id))
         .toList();
@@ -62,8 +66,12 @@ class QuoteService {
         .where((q) => recentIds.contains(q.id))
         .map((q) => q.category)
         .toSet();
+    final recentAuthors = allQuotes
+        .where((q) => recentIds.contains(q.id))
+        .map((q) => q.author)
+        .toSet();
 
-    final rng = Random();
+    final rng = random ?? Random();
 
     final scored = unseen.map((q) {
       double score = 0;
@@ -90,10 +98,6 @@ class QuoteService {
 
       // Recency penalty (already handled by unseen filter, but penalise
       // quotes whose author appeared very recently)
-      final recentAuthors = allQuotes
-          .where((rq) => recentIds.contains(rq.id))
-          .map((rq) => rq.author)
-          .toSet();
       if (recentAuthors.contains(q.author)) score -= 2.0;
 
       // Random noise

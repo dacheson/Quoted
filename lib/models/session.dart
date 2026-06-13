@@ -32,16 +32,18 @@ class SessionState {
   /// Return a new state with [quote] added to liked and seen.
   SessionState withLike(Quote quote) {
     return copyWith(
-      likedQuotes: [...likedQuotes, quote],
-      seenQuoteIds: [...seenQuoteIds, quote.id],
+      likedQuotes: _upsertQuote(likedQuotes, quote),
+      dislikedQuotes: _removeQuote(dislikedQuotes, quote.id),
+      seenQuoteIds: _appendSeenId(quote.id),
     );
   }
 
   /// Return a new state with [quote] added to disliked and seen.
   SessionState withDislike(Quote quote) {
     return copyWith(
-      dislikedQuotes: [...dislikedQuotes, quote],
-      seenQuoteIds: [...seenQuoteIds, quote.id],
+      likedQuotes: _removeQuote(likedQuotes, quote.id),
+      dislikedQuotes: _upsertQuote(dislikedQuotes, quote),
+      seenQuoteIds: _appendSeenId(quote.id),
     );
   }
 
@@ -51,5 +53,18 @@ class SessionState {
     return copyWith(
       seenQuoteIds: [...seenQuoteIds, quote.id],
     );
+  }
+
+  List<String> _appendSeenId(String quoteId) {
+    if (seenQuoteIds.contains(quoteId)) return seenQuoteIds;
+    return [...seenQuoteIds, quoteId];
+  }
+
+  List<Quote> _upsertQuote(List<Quote> quotes, Quote quote) {
+    return [..._removeQuote(quotes, quote.id), quote];
+  }
+
+  List<Quote> _removeQuote(List<Quote> quotes, String quoteId) {
+    return quotes.where((q) => q.id != quoteId).toList();
   }
 }

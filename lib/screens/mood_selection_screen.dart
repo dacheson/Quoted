@@ -44,7 +44,17 @@ class MoodSelectionScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 28),
+              const SizedBox(height: 24),
+              Text(
+                'OFFLINE QUOTE COMPANION',
+                style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 1.2,
+                  color: isDark ? AppTheme.subtleDark : AppTheme.subtleLight,
+                ),
+              ),
+              const SizedBox(height: 12),
               Text(
                 'How are you\nfeeling?',
                 style: TextStyle(
@@ -58,21 +68,23 @@ class MoodSelectionScreen extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               Text(
-                'Select a mood to receive a quote.',
+                'Pick a mood and Quoted will surface something thoughtful in seconds.',
                 style: TextStyle(
                   fontSize: 15,
                   color: isDark ? AppTheme.subtleDark : AppTheme.subtleLight,
+                  height: 1.5,
                 ),
               ),
               const SizedBox(height: 32),
               Expanded(
                 child: GridView.builder(
+                  padding: const EdgeInsets.only(bottom: 12),
                   itemCount: moods.length,
                   gridDelegate:
                       const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
-                    crossAxisSpacing: 12,
-                    mainAxisSpacing: 12,
+                    crossAxisSpacing: 14,
+                    mainAxisSpacing: 14,
                     childAspectRatio: 1.3,
                   ),
                   itemBuilder: (context, index) {

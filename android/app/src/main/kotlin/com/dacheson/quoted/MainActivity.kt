@@ -1,4 +1,4 @@
-package com.example.quoted
+package com.dacheson.quoted
 
 import io.flutter.embedding.android.FlutterActivity
 

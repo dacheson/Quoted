@@ -65,7 +65,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
             ),
             const SizedBox(height: 24),
             Text(
-              'No favorites yet.',
+             'Save quotes you want to revisit.',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
@@ -75,7 +75,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
             ),
             const SizedBox(height: 12),
             Text(
-              'Tap the bookmark icon on any quote\nto save it here.',
+              'Tap the bookmark on any quote\nto keep it handy offline.',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 14,
