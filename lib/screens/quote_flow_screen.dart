@@ -221,7 +221,7 @@ class _QuoteFlowScreenState extends State<QuoteFlowScreen>
             ),
             const SizedBox(height: 24),
             Text(
-              "You've seen all quotes\nfor this mood.",
+              "You've reached the end\nfor this mood.",
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 18,
@@ -231,11 +231,12 @@ class _QuoteFlowScreenState extends State<QuoteFlowScreen>
             ),
             const SizedBox(height: 12),
             Text(
-              'Try a different mood or come back later.',
+              'Try another mood, or reset personalization in Settings to start fresh.',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 14,
                 color: isDark ? AppTheme.subtleDark : AppTheme.subtleLight,
+                height: 1.5,
               ),
             ),
             const SizedBox(height: 32),

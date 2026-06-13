@@ -34,9 +34,11 @@ void main() {
         const MaterialApp(home: FavoritesScreen()),
       );
 
-      expect(find.text('No favorites yet.'), findsOneWidget);
-      expect(find.text('Tap the bookmark icon on any quote\nto save it here.'),
-          findsOneWidget);
+      expect(find.text('Save quotes you want to revisit.'), findsOneWidget);
+      expect(
+        find.text('Tap the bookmark on any quote\nto keep it handy offline.'),
+        findsOneWidget,
+      );
     });
 
     testWidgets('removes a saved favorite from the list and storage', (

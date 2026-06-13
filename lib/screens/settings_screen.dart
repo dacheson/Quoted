@@ -59,7 +59,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Text(
-                'Settings',
+                'Settings & data',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
@@ -184,15 +184,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
       applicationName: 'Quoted',
       applicationVersion: '1.0.0',
       applicationLegalese:
-          'Quotes are drawn from historical public figures and '
-          'are in the public domain or used under fair use for educational '
-          'purposes. All quotes are attributed to their known sources.\n\n'
+          'Quoted pairs a curated offline quote library with simple '
+          'mood-based matching. Quotes are drawn from historical public '
+          'figures and are attributed to their known sources.\n\n'
           'Built with Flutter. Fonts: Lora, Inter (Google Fonts).',
       children: const [
         SizedBox(height: 16),
         Text(
-          'Quoted delivers contextual quotes based on your mood, '
-          'fully offline with no account required.',
+        'Quoted delivers thoughtful quotes for the mood you are in, fully '
+        'offline and with no account required.',
         ),
       ],
     );

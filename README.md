@@ -34,7 +34,7 @@ An offline-first Flutter app that delivers contextual quotes based on your mood.
 - [x] Ship the core quote flow for all moods
 - [x] Persist favorites, likes/dislikes, and dark mode locally
 - [x] Cover exhausted and empty states in the main user flows
-- [ ] Add final app icon, launch branding, and a polish pass for spacing/copy
+- [x] Add final app icon, launch branding, and a polish pass for spacing/copy
 - [ ] Smoke-test every mood flow on physical iOS and Android devices
 
 ### Quality

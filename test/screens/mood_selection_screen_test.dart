@@ -14,7 +14,13 @@ void main() {
     );
 
     expect(find.text('Quoted'), findsOneWidget);
-    expect(find.text('Select a mood to receive a quote.'), findsOneWidget);
+    expect(find.text('OFFLINE QUOTE COMPANION'), findsOneWidget);
+    expect(
+      find.text(
+        'Pick a mood and Quoted will surface something thoughtful in seconds.',
+      ),
+      findsOneWidget,
+    );
     expect(find.byTooltip('Favorites'), findsOneWidget);
     expect(find.byTooltip('Settings'), findsOneWidget);
     expect(find.text('Calm'), findsOneWidget);
