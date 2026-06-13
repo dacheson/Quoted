@@ -1,8 +1,28 @@
+import java.util.Properties
+
 plugins {
     id "com.android.application"
     id "kotlin-android"
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id "dev.flutter.flutter-gradle-plugin"
+}
+
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file("key.properties")
+if (keystorePropertiesFile.exists()) {
+    keystorePropertiesFile.withInputStream { stream ->
+        keystoreProperties.load(stream)
+    }
+}
+
+def releaseSigning = [
+    storeFile: keystoreProperties.getProperty("storeFile") ?: System.getenv("QUOTED_UPLOAD_STORE_FILE"),
+    storePassword: keystoreProperties.getProperty("storePassword") ?: System.getenv("QUOTED_UPLOAD_STORE_PASSWORD"),
+    keyAlias: keystoreProperties.getProperty("keyAlias") ?: System.getenv("QUOTED_UPLOAD_KEY_ALIAS"),
+    keyPassword: keystoreProperties.getProperty("keyPassword") ?: System.getenv("QUOTED_UPLOAD_KEY_PASSWORD"),
+]
+def hasReleaseSigning = releaseSigning.every { _, value ->
+    value != null && value.toString().trim()
 }
 
 android {
@@ -29,13 +49,37 @@ android {
         versionName = flutter.versionName
     }
 
-    buildTypes {
-        release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.debug
+    signingConfigs {
+        if (hasReleaseSigning) {
+            release {
+                keyAlias = releaseSigning.keyAlias
+                keyPassword = releaseSigning.keyPassword
+                storeFile = rootProject.file(releaseSigning.storeFile)
+                storePassword = releaseSigning.storePassword
+            }
         }
     }
+
+    buildTypes {
+        release {
+            if (hasReleaseSigning) {
+                signingConfig = signingConfigs.release
+            }
+        }
+    }
+}
+
+def requestedTasks = gradle.startParameter.taskNames.collect { it.toLowerCase() }
+def requiresReleaseSigning = requestedTasks.any { taskName ->
+    taskName.contains("release") || taskName == "assemble" || taskName == "bundle"
+}
+
+if (requiresReleaseSigning && !hasReleaseSigning) {
+    throw new GradleException(
+        "Release signing is not configured. Copy android/key.properties.example to android/key.properties " +
+        "or provide QUOTED_UPLOAD_STORE_FILE, QUOTED_UPLOAD_STORE_PASSWORD, QUOTED_UPLOAD_KEY_ALIAS, " +
+        "and QUOTED_UPLOAD_KEY_PASSWORD environment variables."
+    )
 }
 
 flutter {
