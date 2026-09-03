@@ -30,90 +30,93 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final surface = isDark ? AppTheme.surfaceDark : AppTheme.surfaceLight;
-    final onSurface =
-        isDark ? AppTheme.onSurfaceDark : AppTheme.onSurfaceLight;
+    final onSurface = isDark ? AppTheme.onSurfaceDark : AppTheme.onSurfaceLight;
 
-    return Container(
-      decoration: BoxDecoration(
-        color: surface,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-      ),
-      padding: EdgeInsets.only(
-        bottom: MediaQuery.of(context).viewInsets.bottom + 24,
-      ),
-      child: SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const SizedBox(height: 12),
-            // Handle bar
-            Container(
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: onSurface.withAlpha(40),
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-            const SizedBox(height: 24),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Text(
-                'Settings & data',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w700,
-                  color: onSurface,
+    // A Material rather than a decorated Container: the ListTiles below paint
+    // their background and ink splashes onto the nearest Material ancestor, so
+    // a coloured box sitting between them and it hides every tap ripple.
+    return Material(
+      color: surface,
+      borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+      clipBehavior: Clip.antiAlias,
+      child: Padding(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom + 24,
+        ),
+        child: SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SizedBox(height: 12),
+              // Handle bar
+              Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: onSurface.withAlpha(40),
+                  borderRadius: BorderRadius.circular(2),
                 ),
               ),
-            ),
-            const SizedBox(height: 16),
-
-            // Dark mode toggle
-            _SettingsTile(
-              icon: _darkMode ? Icons.dark_mode : Icons.light_mode,
-              title: 'Dark Mode',
-              isDark: isDark,
-              trailing: Switch(
-                value: _darkMode,
-                onChanged: (v) {
-                  setState(() => _darkMode = v);
-                  widget.onToggleDarkMode(v);
-                },
+              const SizedBox(height: 24),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Text(
+                  'Settings & data',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
+                    color: onSurface,
+                  ),
+                ),
               ),
-            ),
+              const SizedBox(height: 16),
 
-            _Divider(isDark: isDark),
+              // Dark mode toggle
+              _SettingsTile(
+                icon: _darkMode ? Icons.dark_mode : Icons.light_mode,
+                title: 'Dark Mode',
+                isDark: isDark,
+                trailing: Switch(
+                  value: _darkMode,
+                  onChanged: (v) {
+                    setState(() => _darkMode = v);
+                    widget.onToggleDarkMode(v);
+                  },
+                ),
+              ),
 
-            _SettingsTile(
-              icon: Icons.restart_alt,
-              title: 'Reset Personalization',
-              isDark: isDark,
-              onTap: () => _confirmResetPersonalization(context),
-            ),
+              _Divider(isDark: isDark),
 
-            _Divider(isDark: isDark),
+              _SettingsTile(
+                icon: Icons.restart_alt,
+                title: 'Reset Personalization',
+                isDark: isDark,
+                onTap: () => _confirmResetPersonalization(context),
+              ),
 
-            // Clear favorites
-            _SettingsTile(
-              icon: Icons.delete_outline,
-              title: 'Clear Favorites',
-              isDark: isDark,
-              onTap: () => _confirmClearFavorites(context),
-            ),
+              _Divider(isDark: isDark),
 
-            _Divider(isDark: isDark),
+              // Clear favorites
+              _SettingsTile(
+                icon: Icons.delete_outline,
+                title: 'Clear Favorites',
+                isDark: isDark,
+                onTap: () => _confirmClearFavorites(context),
+              ),
 
-            // About
-            _SettingsTile(
-              icon: Icons.info_outline,
-              title: 'About',
-              isDark: isDark,
-              onTap: () => _showAbout(context),
-            ),
+              _Divider(isDark: isDark),
 
-            const SizedBox(height: 8),
-          ],
+              // About
+              _SettingsTile(
+                icon: Icons.info_outline,
+                title: 'About',
+                isDark: isDark,
+                onTap: () => _showAbout(context),
+              ),
+
+              const SizedBox(height: 8),
+            ],
+          ),
         ),
       ),
     );
@@ -191,8 +194,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
       children: const [
         SizedBox(height: 16),
         Text(
-        'Quoted delivers thoughtful quotes for the mood you are in, fully '
-        'offline and with no account required.',
+          'Quoted delivers thoughtful quotes for the mood you are in, fully '
+          'offline and with no account required.',
         ),
       ],
     );

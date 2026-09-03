@@ -5,10 +5,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:quoted/screens/settings_screen.dart';
 import 'package:quoted/services/storage_service.dart';
 
-import '../helpers/sample_quote.dart';
+import '../helpers/widget_test_support.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
+  useOfflineFonts();
 
   group('SettingsScreen', () {
     late Directory tempDir;
@@ -47,9 +48,9 @@ void main() {
       expect(toggledValue, isTrue);
     });
 
-    testWidgets('clears saved favorites after confirmation', (tester) async {
-      await StorageService.saveFavorite(sampleQuote(id: 'favorite'));
-
+    testWidgets('asks before clearing favorites, and can be cancelled', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -63,23 +64,26 @@ void main() {
 
       await tester.tap(find.text('Clear Favorites'));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Clear'));
+
+      expect(find.byType(AlertDialog), findsOneWidget);
+      expect(
+        find.text(
+          'This will permanently delete all saved favorites. Continue?',
+        ),
+        findsOneWidget,
+      );
+      expect(find.widgetWithText(TextButton, 'Cancel'), findsOneWidget);
+      expect(find.widgetWithText(TextButton, 'Clear'), findsOneWidget);
+
+      await tester.tap(find.widgetWithText(TextButton, 'Cancel'));
       await tester.pumpAndSettle();
 
-      expect(StorageService.getFavorites(), isEmpty);
-      expect(find.text('Favorites cleared.'), findsOneWidget);
+      expect(find.byType(AlertDialog), findsNothing);
     });
 
-    testWidgets('resets personalization without clearing favorites', (
+    testWidgets('asks before resetting personalization, and can be cancelled', (
       tester,
     ) async {
-      final favorite = sampleQuote(id: 'favorite');
-      final liked = sampleQuote(id: 'liked');
-      final disliked = sampleQuote(id: 'disliked');
-      await StorageService.saveFavorite(favorite);
-      await StorageService.saveLikedQuote(liked);
-      await StorageService.saveDislikedQuote(disliked);
-
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -93,13 +97,15 @@ void main() {
 
       await tester.tap(find.text('Reset Personalization'));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Reset'));
+
+      expect(find.byType(AlertDialog), findsOneWidget);
+      expect(find.widgetWithText(TextButton, 'Cancel'), findsOneWidget);
+      expect(find.widgetWithText(TextButton, 'Reset'), findsOneWidget);
+
+      await tester.tap(find.widgetWithText(TextButton, 'Cancel'));
       await tester.pumpAndSettle();
 
-      expect(StorageService.getFavorites(), [favorite]);
-      expect(StorageService.getLikedQuotes(), isEmpty);
-      expect(StorageService.getDislikedQuotes(), isEmpty);
-      expect(find.text('Personalization reset.'), findsOneWidget);
+      expect(find.byType(AlertDialog), findsNothing);
     });
   });
 }

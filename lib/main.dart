@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'services/storage_service.dart';
 import 'screens/mood_selection_screen.dart';
@@ -6,6 +7,9 @@ import 'theme/app_theme.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // Quoted is offline-first: the fonts ship in assets/google_fonts, so never
+  // reach out to fonts.gstatic.com at runtime.
+  GoogleFonts.config.allowRuntimeFetching = false;
   await StorageService.init();
   runApp(const QuotedApp());
 }
