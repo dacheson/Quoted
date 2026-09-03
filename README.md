@@ -16,6 +16,8 @@ a plane and stores nothing about you anywhere but your own device.
 
 Deployed to GitHub Pages from `main`: **https://dacheson.github.io/Quoted/**
 
+![Mood selection and a quote from the Calm set, running in the browser](docs/screenshot.png)
+
 ## What it does
 
 - **Ten moods** — calm, motivated, hopeful, grieving, angry, anxious, lonely, reflective, joyful
