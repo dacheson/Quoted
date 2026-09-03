@@ -20,7 +20,7 @@ class MoodSelectionScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final moods = Mood.values;
+    const moods = Mood.values;
 
     return Scaffold(
       appBar: AppBar(

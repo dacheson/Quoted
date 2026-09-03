@@ -8,7 +8,7 @@ void main() {
   group('SessionState', () {
     test('withLike adds quote once and avoids duplicating seen ids', () {
       final quote = sampleQuote(id: 'liked');
-      final session = SessionState(
+      final session = const SessionState(
         selectedMood: Mood.calm,
         seenQuoteIds: const ['liked'],
       );
