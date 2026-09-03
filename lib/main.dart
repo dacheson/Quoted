@@ -46,6 +46,19 @@ class _QuotedAppState extends State<QuotedApp> {
         theme: AppTheme.light(),
         darkTheme: AppTheme.dark(),
         themeMode: _darkMode ? ThemeMode.dark : ThemeMode.light,
+        // Quoted is a phone app, and on the web it is handed the full browser
+        // width. Unconstrained, the mood grid renders two cards a thousand
+        // pixels across holding one icon each. Cap the layout at a phone-ish
+        // width and centre it so the desktop demo matches the app.
+        builder: (context, child) => ColoredBox(
+          color: Theme.of(context).scaffoldBackgroundColor,
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 480),
+              child: child,
+            ),
+          ),
+        ),
         home: MoodSelectionScreen(
           darkMode: _darkMode,
           onToggleDarkMode: _toggleDarkMode,
