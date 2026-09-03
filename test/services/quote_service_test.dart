@@ -11,9 +11,9 @@ void main() {
   group('QuoteService.nextQuote', () {
     test('returns null when every quote has been seen', () {
       final quote = sampleQuote(id: 'seen');
-      final session = const SessionState(
+      const session = SessionState(
         selectedMood: Mood.calm,
-        seenQuoteIds: const ['seen'],
+        seenQuoteIds: ['seen'],
       );
 
       final next = QuoteService.nextQuote([quote], session, random: Random(1));
