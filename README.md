@@ -1,57 +1,104 @@
 # Quoted
 
-A wise word for whatever mood you are in.
+**A wise word for whatever mood you are in.**
 
-An offline-first Flutter app that delivers contextual quotes based on your mood. Like or dislike quotes to personalize your experience. Fully offline, no backend required.
+[![Flutter CI](https://github.com/dacheson/Quoted/actions/workflows/flutter-ci.yml/badge.svg)](https://github.com/dacheson/Quoted/actions/workflows/flutter-ci.yml)
+[![license](https://img.shields.io/badge/license-MIT-1f6455)](LICENSE)
+[![Flutter](https://img.shields.io/badge/Flutter-%3E%3D3.10-1f6455)](https://flutter.dev)
 
-## Status
+An offline-first Flutter app that serves quotes matched to how you are actually feeling. Choose a
+mood, read, like or dislike to shape what comes next, and keep the ones worth returning to.
 
-✅ MVP-ready foundation on `copilot/check-next-steps`
+No account, no backend, no network calls. The entire dataset ships inside the app, so it works on
+a plane and stores nothing about you anywhere but your own device.
 
-## Run locally
+## Live demo
 
-1. Install Flutter 3.10 or newer.
-2. Run `flutter pub get`.
-3. Launch the app with `flutter run`.
+Deployed to GitHub Pages from `main`: **https://dacheson.github.io/Quoted/**
 
-## Validation
+## What it does
 
-- `flutter analyze`
-- `flutter test`
+- **Ten moods** — calm, motivated, hopeful, grieving, angry, anxious, lonely, reflective, joyful
+  and disciplined. Quotes are tagged by mood rather than filed under one category, so the same
+  passage can surface for anger and for calm.
+- **Learns as you go** — likes and dislikes persist across restarts and feed the ranking, so the
+  selection narrows toward what actually lands for you.
+- **Context on demand** — every quote carries its author, era and real source, expandable inline.
+  The Marcus Aurelius entries cite the book of *Meditations* they came from, not just his name.
+- **Favourites** — saved locally, available offline.
+- **Handles running out** — exhausted and empty states are covered rather than left to fail.
+- **Dark mode**, persisted.
 
-> Manual follow-up: this sandbox does not include the Flutter SDK, so device smoke tests and local Flutter validation still need to be run in a Flutter-enabled environment.
+## The quote dataset
 
-## Included in the MVP
+`assets/quotes.json` holds 80 quotes from 67 authors. Every entry carries an author, era, themes,
+applicable moods, a short biographical context and a real source reference — these are attributed
+excerpts, not an unsourced scrape.
 
-- [x] Mood-based quote selection
-- [x] Offline favorites and dark mode
-- [x] Persisted likes/dislikes for personalization across app restarts
-- [x] Local quote dataset with contextual source details
-- [x] Basic automated coverage for ranking, persistence, and core UI
+## Project layout
 
-## Ship-ready checklist
+```
+lib/models/      Quote, Mood and SessionState
+lib/services/    quote selection and ranking, local persistence
+lib/screens/     mood selection, quote flow, favourites, settings
+lib/widgets/     quote card, mood button, expandable context, actions
+lib/theme/       light and dark themes
+assets/          the quote dataset
+test/            unit and widget coverage for the above
+```
 
-### Product and UX
+## Running locally
 
-- [x] Ship the core quote flow for all moods
-- [x] Persist favorites, likes/dislikes, and dark mode locally
-- [x] Cover exhausted and empty states in the main user flows
-- [x] Add final app icon, launch branding, and a polish pass for spacing/copy
-- [ ] Smoke-test every mood flow on physical iOS and Android devices *(manual: requires device access)*
+```bash
+flutter pub get
+flutter run
+```
 
-### Quality
+Requires Flutter 3.10 or newer.
 
-- [x] Document the local setup and validation commands
-- [x] Cover ranking, persistence, session-state, and mood-selection behavior with tests
-- [x] Add widget coverage for favorites and settings flows
-- [ ] Run `flutter analyze` successfully in a Flutter-enabled environment *(manual: Flutter SDK unavailable in this sandbox)*
-- [ ] Run `flutter test` successfully in a Flutter-enabled environment *(manual: Flutter SDK unavailable in this sandbox)*
-- [x] Add CI automation for `flutter analyze` and `flutter test`
+## Tests
 
-### Release ops
+```bash
+flutter analyze
+flutter test
+```
 
-- [x] Replace the Android debug signing config with a real release signing setup
-- [ ] Verify iOS archive/release configuration *(manual: requires Xcode archive validation on macOS)*
-- [x] Prepare store copy, privacy disclosures, and release notes in `/docs/release-prep.md`
-- [ ] Capture final store screenshots from release builds *(manual: requires emulator/device capture)*
-- [ ] Produce and review a beta build for each platform *(manual: requires release tooling and installable builds)*
+Both run in CI on every push and pull request to `main`.
+
+## How this was built
+
+Quoted was an experiment in agent-led development. Most of the implementation was carried out by
+GitHub Copilot's cloud agent, driven from the GitHub mobile app — issues and review comments in,
+pull requests out, with no local development environment involved. The commit history reflects
+that, and is left intact.
+
+The interesting part was not the code generation. It was the orchestration: scoping each task
+narrowly enough that a review could actually catch a mistake, deciding what to accept and what to
+send back, and keeping a running definition of done. The ship-readiness checklist below was the
+control surface for that.
+
+## Ship-readiness
+
+**Done**
+
+- [x] Core quote flow across all ten moods
+- [x] Favourites, likes/dislikes and dark mode persisted locally
+- [x] Exhausted and empty states covered in the main flows
+- [x] Final app icon and launch branding
+- [x] Unit coverage for ranking, persistence and session state
+- [x] Widget coverage for favourites, settings and mood selection
+- [x] CI running `flutter analyze` and `flutter test`
+- [x] Release signing configured from a gitignored key file or environment variables
+- [x] Store copy, privacy disclosures and release notes in [`docs/release-prep.md`](docs/release-prep.md)
+- [x] Web build deployed to GitHub Pages
+
+**Outstanding — needs physical hardware**
+
+- [ ] Smoke-test every mood flow on physical iOS and Android devices
+- [ ] Verify the iOS archive/release configuration on macOS
+- [ ] Capture store screenshots from release builds
+- [ ] Produce and review a beta build for each platform
+
+## Licence
+
+[MIT](LICENSE)
