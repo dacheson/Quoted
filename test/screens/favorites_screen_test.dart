@@ -49,6 +49,16 @@ void main() {
     // the suite hangs rather than fails. Removal is covered directly by
     // test/services/storage_service_test.dart; the list rebuild needs an
     // integration test to cover properly.
+    //
+    // Confirmed 2026-09-03: settleUntil does not rescue it either. It handles a
+    // handler whose continuation needs the real event loop, but not the await
+    // itself - the tap dispatches inside the fake-async zone, so the Hive future
+    // is created there and never completes. The test hung and was killed by the
+    // 10-minute per-test timeout. Fixing it properly means either driving the tap
+    // inside tester.runAsync, or putting storage behind an interface with an
+    // in-memory implementation so widget tests never touch disk. Note no test in
+    // this suite writes to Hive from a tap today - the settings dialogs are all
+    // asserted on the cancel path.
     testWidgets('removes a saved favorite from the list and storage', (
       tester,
     ) async {
