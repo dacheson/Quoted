@@ -37,33 +37,31 @@ Future<void> runRealAsync(
   });
 }
 
-/// Alternates real-event-loop yields with frame pumps until [done] holds.
+/// Taps [finder] and lets a handler that awaits storage run to completion.
 ///
-/// Use this **after a tap** whose handler touches storage.
+/// Use this for any tap whose handler awaits Hive.
 ///
-/// Such a handler suspends part-way through. The write itself lands straight
-/// away, but the continuation after the `await` - typically the `setState` -
-/// only resumes once the real event loop has run, and the rebuild only happens
-/// on the following pump. One round of each is not enough: the future completes
-/// on the first round and the continuation runs on the second. Handlers that
-/// await `showDialog` first need more still, because dismissing the dialog
-/// needs its own pumps and pumping is forbidden inside `runAsync`.
+/// The tap must be dispatched **inside** `tester.runAsync`. A `testWidgets`
+/// body runs in a fake-async zone, and a future backed by real I/O created in
+/// that zone never completes - the handler stays suspended and the test hangs
+/// until the per-test timeout kills it, rather than failing with something you
+/// can read. Inside `runAsync` the await runs on the real event loop instead.
 ///
-/// Alternating until the expected state appears avoids hard-coding a count.
-Future<void> settleUntil(
+/// The pumps have to come after, not inside: pumping is forbidden within
+/// `runAsync`. The first flushes the handler's `setState`, the second advances
+/// any transition it started, such as a snackbar.
+///
+/// Yielding on the real loop *after* an outside-the-zone tap does not work -
+/// that drives a continuation, and the await itself is what is stuck.
+Future<void> tapAndSettle(
   WidgetTester tester,
-  bool Function() done, {
-  int maxRounds = 20,
+  Finder finder, {
+  Duration settle = const Duration(milliseconds: 300),
 }) async {
-  for (var round = 0; round < maxRounds; round++) {
-    if (done()) return;
-    await tester.runAsync(
-      () => Future<void>.delayed(const Duration(milliseconds: 20)),
-    );
-    // Deliberately not pumpAndSettle: it carries a ten-minute internal timeout,
-    // so a single unsettled animation inside this loop would hang the suite
-    // rather than fail it. Two bounded pumps advance any transition far enough.
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 200));
-  }
+  await tester.runAsync(() async {
+    await tester.tap(finder);
+    await Future<void>.delayed(settle);
+  });
+  await tester.pump();
+  await tester.pump(settle);
 }
