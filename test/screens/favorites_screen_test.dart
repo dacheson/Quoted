@@ -43,12 +43,6 @@ void main() {
       );
     });
 
-    // Skipped: tapping the remove button starts a handler that awaits Hive.
-    // A testWidgets body runs in a fake-async zone that never completes a
-    // real-I/O future, so the handler stays suspended and blocks tearDown -
-    // the suite hangs rather than fails. Removal is covered directly by
-    // test/services/storage_service_test.dart; the list rebuild needs an
-    // integration test to cover properly.
     testWidgets('removes a saved favorite from the list and storage', (
       tester,
     ) async {
@@ -72,15 +66,22 @@ void main() {
       expect(StorageService.getFavorites(), [quote]);
 
       await tester.tap(find.byTooltip('Remove from favorites'));
-      await tester.pump();
 
-      // The removal itself is asserted here; the list rebuild and the
-      // confirmation snackbar are not. The handler awaits storage, and a
-      // testWidgets body cannot drive a real-I/O future to completion, so the
-      // continuation that calls setState never resumes. Rebuild behaviour
-      // belongs in an integration test; persistence is covered directly by
-      // test/services/storage_service_test.dart.
+      // The handler awaits Hive before calling setState, so the write lands on
+      // the real event loop but the rebuild only happens on a later pump.
+      // settleUntil alternates the two until the whole effect has landed.
+      await settleUntil(
+        tester,
+        () =>
+            StorageService.getFavorites().isEmpty &&
+            find.text('Stay present.').evaluate().isEmpty &&
+            find.text('Removed from favorites.').evaluate().isNotEmpty,
+      );
+
       expect(StorageService.getFavorites(), isEmpty);
-    }, skip: true);
+      expect(find.text('Stay present.'), findsNothing);
+      expect(find.text('Save quotes you want to revisit.'), findsOneWidget);
+      expect(find.text('Removed from favorites.'), findsOneWidget);
+    });
   });
 }
